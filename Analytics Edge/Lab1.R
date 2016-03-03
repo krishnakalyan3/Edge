@@ -56,3 +56,57 @@ WHO$Country[86]
 which.max(WHO$Under15)
 WHO$Country[124]
 plot(WHO$GNI,WHO$FertilityRate)
+Outliers = subset(WHO,GNI>10000 & FertilityRate >2.5)
+nrow(Outliers)
+Outliers[c("Country","GNI","FertilityRate")]
+
+mean(WHO$Over60)
+which.min(WHO$Over60)
+WHO$Country[183]
+WHO$Country[which.max(WHO$LiteracyRate)]
+hist(WHO$CellularSubscribers)
+boxplot(WHO$LifeExpectancy ~ WHO$Region,xlab="",ylab="Life Expetancy",main="Life Expetancy of Countries by Region")
+?boxplot
+table(WHO$Region)
+tapply(WHO$Over60, WHO$Region, mean)
+?tapply
+tapply(WHO$LiteracyRate, WHO$Region, min,na.rm=T)
+tapply(WHO$ChildMortality, WHO$Region, mean)
+
+
+## Recitation
+getwd()
+USDA = read.csv("../Data/USDA.csv")
+str(USDA)
+summary(USDA)
+USDA$Sodium
+which.max(USDA$Sodium)
+names(USDA)
+USDA$Description[which.max(USDA$Sodium)]
+HighSodium = subset(USDA,Sodium >10000)
+nrow(HighSodium)
+HighSodium$Description
+match("CAVIAR",USDA$Description)
+USDA$Sodium[4154]
+USDA$Sodium[match("CAVIAR",USDA$Description)]
+summary(USDA$Sodium)
+sd(USDA$Sodium,na.rm=T)
+plot(USDA$Protein,USDA$TotalFat,ylab="Fat",xlab="Protein",main="Protein vs Fat",col="red",pch=19)
+hist(USDA$VitaminC,xlab =  "Vitamin C in mg", main ="Histogram of Vit C levels",xlim=c(0,100),breaks=2000)
+boxplot(USDA$Sugar, main = "Boxplot of Sugar Levels" ,ylab="Sugar in gm")
+
+USDA$Sodium[1] > mean(USDA$Sodium,na.rm=T)
+USDA$Sodium[50] > mean(USDA$Sodium,na.rm=T)
+HighSodium =  USDA$Sodium > mean(USDA$Sodium,na.rm=T)
+str(HighSodium)
+HighSodium =  as.numeric(USDA$Sodium > mean(USDA$Sodium,na.rm=T))
+USDA$HighSodium =  as.numeric(USDA$Sodium > mean(USDA$Sodium,na.rm=T))
+str(USDA)
+USDA$HighProtein =  as.numeric(USDA$Protein > mean(USDA$Protein,na.rm=T))
+USDA$HighFat =  as.numeric(USDA$TotalFat > mean(USDA$TotalFat,na.rm=T))
+USDA$HighCarbs =  as.numeric(USDA$Carbohydrate > mean(USDA$Carbohydrate,na.rm=T))
+str(USDA)
+table(USDA$HighSodium,USDA$HighFat)
+tapply(USDA$Iron, USDA$HighProtein, mean,na.rm=T)
+tapply(USDA$VitaminC, USDA$HighCarbs, max,na.rm=T)
+tapply(USDA$VitaminC, USDA$HighCarbs, summary,na.rm=T)
