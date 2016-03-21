@@ -144,3 +144,15 @@ model1 = glm(Republican ~ PropR,train,family=binomial())
 summary(model1)
 
 # AIC 19.8
+pred1 = predict(model1,type="response")
+table(train$Republican,pred1>=0.5)
+
+model2 = glm(Republican ~SurveyUSA +DiffCount , data = train, family="binomial")
+pred2 = predict(model2,type="response")
+summary(model2)
+table(train$Republican,pred2>=0.5)
+
+table(test$Republican, sign(test$Rasmussen))
+testpred = predict(model2,newdata=test,type="response")
+table(test$Republican,testpred>=0.5)
+subset(test,testpred>=0.5 & Republican ==0)
