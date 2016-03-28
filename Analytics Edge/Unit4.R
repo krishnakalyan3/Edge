@@ -78,3 +78,4 @@ cm = table(Test$Reverse,PredictCV)
 accuracy = (cm[1,1]+cm[2,2])/(cm[1,1]+cm[2,2]+cm[2,1]+cm[1,2])
 accuracy
 
+
