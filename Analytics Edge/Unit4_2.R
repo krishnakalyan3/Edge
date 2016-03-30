@@ -61,5 +61,6 @@ ClaimsTree = rpart(bucket2009~ age + arthritis + alzheimers+ cancer+
 
 predictTest = predict(ClaimsTree,ClaimsTest,type="class")
 op = table(ClaimsTest$bucket2009,predictTest)
+op
 sum(diag(op))/nrow(ClaimsTest)
 sum(as.matrix(op)*PenaltyMatrix)/nrow(ClaimsTest)
