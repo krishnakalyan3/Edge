@@ -37,3 +37,25 @@ train = subset(labeledTerms, spl ==T)
 test  = subset(labeledTerms, spl ==F)
 emailCart = rpart(responsive ~ . , data = train, method="class")
 prp(emailCart)
+pred = predict(emailCart, test)
+pred[1:10,]
+pred.prob  = pred[,2]
+
+table(test$responsive, pred.prob >=0.5)
+(204+18)/(11+24+204+18)
+table(test$responsive)
+215/(215 + 42)
+library(ROCR)
+predROCR = prediction(pred.prob,test$responsive)
+prefROCR = performance(predROCR,"tpr","fpr")
+plot(prefROCR, colorize = T )
+performance(predROCR,"auc")@y.values
+exp(.99)
+
+0.90 = 1/(1+exp(-score))
+0.90 *(1 + exp(-s)) = 1 
+0.90 + .90 * exp(-s) = 1
+.90 * exp(-s) = 1 -.90
+exp(-s) = (1 - .90)/.90
+s = log((1 -.90)/.90)
+s
