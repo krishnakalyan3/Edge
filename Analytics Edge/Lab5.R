@@ -32,3 +32,13 @@ subset(movies,Title=="Men in Black (1997)")
 clustergroups[257]
 cluster2 = subset(movies,clustergroups ==2)
 cluster2$Title[1:10]
+
+spl = split(movies[2:20],clustergroups)
+lapply(spl, colMeans)
+
+
+clustergroups = cutree(clusterMovies,k =2)
+spl = split(movies[2:20],clustergroups)
+lapply(spl, colMeans)
+
+
