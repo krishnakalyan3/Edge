@@ -3,7 +3,7 @@ sd(c(5,8,12))
 
 # Q 2
 which.min(c(4,8,6))
-
+which.min(c(4,1,6))
 # Q 3 
 Sys.setlocale("LC_ALL", "C")
 
