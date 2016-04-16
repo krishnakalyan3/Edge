@@ -39,3 +39,7 @@ Top5$LocationDescription = factor(Top5$LocationDescription)
 str(Top5)
 table(Top5$LocationDescription,Top5$Arrest) /                                 
 ((table(Top5$LocationDescription,Top5$Arrest)[,1]) + (table(Top5$LocationDescription,Top5$Arrest)[,2]) )
+
+#On which day of the week do the most motor vehicle thefts at gas stations happen?
+str(mvt)
+(table(Top5$LocationDescription =="DRIVEWAY - RESIDENTIAL",Top5$Weekday))
