@@ -12,8 +12,34 @@ min(GE$StockPrice)
 max(CocaCola$StockPrice)
 median(Boeing$StockPrice)
 sd(ProcterGamble$StockPrice)
-
+IBM$Date = as.Date(IBM$Date, "%m/%d/%y")
+GE$Date = as.Date(GE$Date, "%m/%d/%y")
+CocaCola$Date = as.Date(CocaCola$Date, "%m/%d/%y")
+ProcterGamble$Date = as.Date(ProcterGamble$Date, "%m/%d/%y")
+Boeing$Date = as.Date(Boeing$Date, "%m/%d/%y")
 # Plot
-plot(IBM$StockPrice,IBM$Date,"l")
+
 plot(CocaCola$Date,CocaCola$StockPrice, type="l", col="red")
-plot(CocaCola$Date,CocaCola$StockPrice, type="l", col="red")
+lines(ProcterGamble$Date, ProcterGamble$StockPrice,col="blue",lty=2)
+abline(v=as.Date(c("1983-03-01")), lwd=2)
+plot(CocaCola$Date[301:432], CocaCola$StockPrice[301:432], type="l", col="red", ylim=c(0,210))
+lines(IBM$Date[301:432], IBM$StockPrice[301:432], type="l", col="blue", ylim=c(0,210))
+lines(GE$Date[301:432], GE$StockPrice[301:432], type="l", col="green", ylim=c(0,210))
+lines(ProcterGamble$Date[301:432], ProcterGamble$StockPrice[301:432], type="l", col="purple", ylim=c(0,210))
+lines(Boeing$Date[301:432], Boeing$StockPrice[301:432], type="l", col="orange", ylim=c(0,210))
+abline(v=as.Date(c("2000-03-01")), lwd=2)
+abline(v=as.Date(c("2005-03-01")), lwd=2)
+
+abline(v=as.Date(c("1997-09-01")), lwd=1)
+abline(v=as.Date(c("1997-11-01")), lwd=1)
+
+abline(v=as.Date(c("2004-01-01")), lwd=1)
+abline(v=as.Date(c("2005-12-01")), lwd=1)
+
+months(IBM$Date)
+?tapply
+tapply(IBM$StockPrice, months(IBM$Date), mean) >mean(IBM$StockPrice)
+tapply(CocaCola$StockPrice, months(CocaCola$Date), mean) 
+tapply(GE$StockPrice, months(GE$Date), mean) 
+
+
