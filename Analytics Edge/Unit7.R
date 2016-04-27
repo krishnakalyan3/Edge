@@ -1,0 +1,10 @@
+WHO = read.csv("WHO.csv")
+str(WHO)
+plot(WHO$GNI,WHO$FertilityRate)
+library("ggplot2")
+scatterplot = ggplot(WHO, aes(x = GNI, y = FertilityRate))
+scatterplot + geom_point()
+scatterplot + geom_line()
+
+scatterplot + geom_point(color= "blue",size = 3, shape=17)
+scatterplot + geom_point(color= "darkred",size = 3, shape=8)
