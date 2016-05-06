@@ -99,3 +99,20 @@ summary(model6)
 
 # Coefficient is negative, reflecting that women are less likely to vote 
 
+# Problem 3.4 - Interaction Terms
+Possibilities = data.frame(sex=c(0,0,1,1),control=c(0,1,0,1))
+predict(model6, newdata=Possibilities, type="response")[4] -
+predict(CARTmodel5, newdata=Possibilities)[4]
+
+# 4 
+# 0.0003506733
+
+# Problem 3.5 - Interaction Terms
+LogModel2 = glm(voting ~ sex + control + sex:control, data=gerber, family="binomial")
+summary(LogModel2)
+
+#  If a person is a woman and in the control group, the chance that she voted goes down. 
+
+# Problem 3.6 - Interaction Terms
+predict(LogModel2, newdata=Possibilities, type="response")[4] -
+  predict(CARTmodel5, newdata=Possibilities)[4]
