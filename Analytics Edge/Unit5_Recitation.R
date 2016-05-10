@@ -45,6 +45,7 @@ table(test$responsive, pred.prob >=0.5)
 (204+18)/(11+24+204+18)
 table(test$responsive)
 215/(215 + 42)
+
 library(ROCR)
 predROCR = prediction(pred.prob,test$responsive)
 prefROCR = performance(predROCR,"tpr","fpr")
