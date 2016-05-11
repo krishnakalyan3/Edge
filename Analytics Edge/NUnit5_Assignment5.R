@@ -88,7 +88,7 @@ mean(wikiWords2$NumWordsAdded)
 # Problem 2.4 - Problem-Specific Knowledge
 train1 = subset(wikiWords2, spl==TRUE)
 test1 = subset(wikiWords2, spl==FALSE)
-model4 = rpart(wikiTrain2$`wiki$Vandal` ~ .  , data = wikiTrain2, method="class")
+model4 = rpart(train1$`wiki$Vandal` ~ .  , data = train1, method="class")
 predtest  = predict(model4, test1, type = "class")
 op =table(test1$`wiki$Vandal`, predtest)
 op
@@ -100,8 +100,12 @@ wikiWords3$Minor = wiki$Minor
 wikiWords3$Loggedin = wiki$Loggedin
 train1 = subset(wikiWords3, spl==TRUE)
 test1 = subset(wikiWords3, spl==FALSE)
-model5 = rpart(wikiWords3$`wiki$Vandal` ~ .  , data = wikiWords3, method="class")
+model5 = rpart(train1$`wiki$Vandal` ~ .  , data = train1, method="class")
 predtest  = predict(model5, test1, type = "class")
 op =table(test1$`wiki$Vandal`, predtest)
-(535 + 83)/sum(op)
+op
+(535 + 301)/sum(op)
+
+# Problem 3.2 - Using Non-Textual Data
+prp(model5)
 
