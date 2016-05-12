@@ -136,8 +136,12 @@ Acc = (TP + TN)/sum(cm)
 Acc
 
 # Problem 4.2 - Evaluating the Model on the Testing Set
+predTest
 library(ROCR)
-predROCR = prediction(predict(model1, test , ),test$trial)
+predROCR = prediction(predTest[,2],test$trial)
 prefROCR = performance(predROCR,"tpr","fpr")
 plot(prefROCR, colorize = T )
 performance(predROCR,"auc")@y.values
+
+# PART 5: DECISION-MAKER TRADEOFFS
+
