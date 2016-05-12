@@ -63,3 +63,141 @@ spam = subset(emailsSparse,spam ==1)
 #3
 
 # Problem 3.1 - Building machine learning models
+emailsSparse$spam = as.factor(emailsSparse$spam)
+library(caTools)
+set.seed(123)
+spl = sample.split(emailsSparse$spam, 0.7)
+train = subset(emailsSparse, spl ==T)
+test  = subset(emailsSparse, spl ==F)
+
+spamLog = glm(spam ~ . , data = train , family = "binomial")
+spamCART = rpart(spam ~ . , data = train, method="class")
+library(randomForest)
+spamRF = randomForest(spam ~ . , data = train)
+
+predlog = predict(spamLog)
+predlog
+predCART = predict(spamCART)
+predCART
+predRF = predict(spamRF,train)
+predRF
+
+table(predlog < 0.00001)
+table(predlog > 0.99999)
+table(predlog >= 0.00001 & predlog <= 0.99999)
+
+# Problem 3.2 - Building Machine Learning Models
+summary(spamLog)
+# 0
+
+# Problem 3.3 - Building Machine Learning Models
+prp(spamCART)
+# 2
+
+# Problem 3.4 - Building Machine Learning Models
+cm  =table(train$spam,predlog>=0.5)
+TN = cm[1,1]
+TP = cm[2,2]
+FN = cm[2,1]
+FP = cm[1,2]
+Acc = (TP + TN)/sum(cm) 
+Acc
+#  0.9990025
+
+# Problem 3.5 - Building Machine Learning Models
+
+library(ROCR)
+predROCR = prediction(predlog,train$spam)
+prefROCR = performance(predROCR,"tpr","fpr")
+plot(prefROCR, colorize = T )
+performance(predROCR,"auc")@y.values
+
+# 0.9999959
+
+# Problem 3.6 - Building Machine Learning Models
+cm  =table(train$spam,predCART[,2]>=0.5)
+TN = cm[1,1]
+TP = cm[2,2]
+FN = cm[2,1]
+FP = cm[1,2]
+Acc = (TP + TN)/sum(cm) 
+Acc
+
+# 0.942394
+
+# Problem 3.7 - Building Machine Learning Models
+library(ROCR)
+predROCR = prediction(predCART[,2],train$spam)
+prefROCR = performance(predROCR,"tpr","fpr")
+plot(prefROCR, colorize = T )
+performance(predROCR,"auc")@y.values
+
+# Problem 3.8 - Building Machine Learning Models
+cm  =table(train$spam,predRF>=0.5)
+TN = cm[1,1]
+TP = cm[2,2]
+FN = cm[2,1]
+FP = cm[1,2]
+Acc = (TP + TN)/sum(cm) 
+Acc
+
+# Problem 3.9 - Building Machine Learning Models
+library(ROCR)
+predROCR = prediction(predRF,train$spam)
+prefROCR = performance(predROCR,"tpr","fpr")
+plot(prefROCR, colorize = T )
+performance(predROCR,"auc")@y.values
+
+# 0.9999928
+
+# Problem 4.1 - Evaluating on the Test Set
+cm  =table(test$spam, predict(spamLog, test) >=0.5)
+TN = cm[1,1]
+TP = cm[2,2]
+FN = cm[2,1]
+FP = cm[1,2]
+Acc = (TP + TN)/sum(cm) 
+Acc
+#  0.9511059
+
+# What is the testing set AUC of spamLog?
+predROCR = prediction(predict(spamLog, test),test$spam)
+prefROCR = performance(predROCR,"tpr","fpr")
+plot(prefROCR, colorize = T )
+performance(predROCR,"auc")@y.values
+
+# 0.9767994
+
+# Problem 4.3 - Evaluating on the Test Set
+cm  =table(test$spam, predict(spamCART, test)[,2] >=0.5)
+TN = cm[1,1]
+TP = cm[2,2]
+FN = cm[2,1]
+FP = cm[1,2]
+Acc = (TP + TN)/sum(cm) 
+Acc
+
+# 0.9394645
+
+# Problem 4.4 - Evaluating on the Test Set
+predROCR = prediction(predict(spamCART, test)[,2],test$spam)
+prefROCR = performance(predROCR,"tpr","fpr")
+plot(prefROCR, colorize = T )
+performance(predROCR,"auc")@y.values
+
+# Problem 4.5 - Evaluating on the Test Set
+cm  =table(test$spam, predict(spamRF, test) >=0.5)
+TN = cm[1,1]
+TP = cm[2,2]
+FN = cm[2,1]
+FP = cm[1,2]
+Acc = (TP + TN)/sum(cm) 
+Acc
+
+# 0.9743888
+
+# Problem 4.6 - Evaluating on the Test Set
+
+
+
+
