@@ -197,6 +197,10 @@ Acc
 # 0.9743888
 
 # Problem 4.6 - Evaluating on the Test Set
+predROCR = prediction(predict(spamRF, test),test$spam)
+prefROCR = performance(predROCR,"tpr","fpr")
+plot(prefROCR, colorize = T )
+performance(predROCR,"auc")@y.values
 
 
 
