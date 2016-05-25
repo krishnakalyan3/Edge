@@ -9,12 +9,35 @@ setwd("/Users/krishna/MOOC/Edge/Kaggle")
 train1 = read.csv("train2016.csv")
 test = read.csv("test2016.csv")
 
-names(train1)
+traincol = c("YOB","Gender","Income","HouseholdStatus","EducationLevel")
+trainY = train1[traincol]
+testY = test[traincol]
+
+dataY = rbind(trainY,testY)
+dim(dataY)
+dataYtrain = na.omit(dataY)
+
+modelYOB = randomForest(as.factor(YOB) ~ ., dataYtrain)
+predictYOBtrain = predict(modelYOB, train1)
+predictYOBtest = predict(modelYOB, test)
+
+train1$predYOB = predictYOBtrain
+test$predYOB = predictYOBtest
+
+train1$YOB[is.na(trainY$YOB)] = train1$predYOB[is.na(trainY$YOB)]
+test$YOB[is.na(test$YOB)] = test$predYOB[is.na(test$YOB)]
+
+summary(train1)
+
+removecols = c("predYOB")
+train1 = train1[, !(colnames(train1) %in% removecols)]
+test = test[, !(colnames(test) %in% removecols)]
 
 
 # Fix YOB
 train1$YOB[is.na(train1$YOB)] = 1980
 test$YOB[is.na(test$YOB)] = 1980
+
 
 #YOB 
 # Mean 1980
@@ -48,9 +71,11 @@ sum(is.na(test))
 
 #md.pattern(train)
 summary(train)
+alldata = rbind(train,validation)
 
-model1 = randomForest(Party ~ ., train)
-
+train_control <- trainControl(method="cv", number=5)
+model1 = train(Party ~ ., alldata,trControl=train_control, method="rf")
+print(model1)
 #summary(model1)
 #plot(model1, log="y")
 #varImpPlot(model1)

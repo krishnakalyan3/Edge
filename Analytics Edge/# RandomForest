@@ -6,3 +6,6 @@ RF (median)
 
 RF (mean)
 [1] 0.6203593
+
+RF fix YOB and ntree 1501
+[1] 0.6203593
