@@ -9,3 +9,18 @@ RF (mean)
 
 RF fix YOB and ntree 1501
 [1] 0.6203593
+
+GBM
+(public)
+0.63218
+
+(cv)
+0.6422082
+
+SVM
+cv
+0.6242802
+
+
+'rf', 'nnet','svm','xgboost'
+0.6205107
