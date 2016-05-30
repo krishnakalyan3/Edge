@@ -24,3 +24,33 @@ cv
 
 'rf', 'nnet','svm','xgboost'
 0.6205107
+
+'xgboost'
+0.6212277
+
+#######
+model2 = train(Party ~ ., data = train1, methodList=algorithmList)
+model3 = randomForest(Party ~ ., data = train1)
+varImpPlot(model3,type=2)
+
+
+
+gbmGrid <-  expand.grid(interaction.depth = c(1, 5, 9),
+                        n.trees = 2000,
+                        shrinkage = 0.1,
+                        n.minobsinnode = 10)
+
+rfGrid <- expand.grid(.mtry=c(1:30))
+
+Tcontrol <- trainControl(method="cv", number=5)
+model1 = train(Party ~ ., data = train1,trControl=Tcontrol, method="gbm"
+               ,tuneGrid = gbmGrid)
+
+?train
+# TO DO write Imputed CSV
+write.csv(test1,file ="imputetest.csv",row.names=FALSE,quote=F)
+write.csv(train1,file ="imputetrain.csv",row.names=FALSE,quote=F)
+
+# Create a blender
+
+

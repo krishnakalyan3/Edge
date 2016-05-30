@@ -1,0 +1,50 @@
+
+
+##########################
+myAlgo =c('rf',
+          'glmnet',
+          'gbm',
+          'glm',
+          'LogitBoost',
+          'svmLinear',
+          'svmPoly' ,
+          'svmRadial',
+          'svmRadialCost' ,
+          'svmRadialWeights', 
+          'rpart',
+          'knn',
+          'treebag',
+          'bagFDA',
+          'LogitBoost',
+          'rpartCost',
+          'gcvEarth',
+          'nb',
+          'pam',
+          'partDSA',
+          'kernelpls',
+          'pls',
+          'simpls',
+          'widekernelpls',
+          'pda',
+          'pda2',
+          'PenalizedLDA',
+          'xgbLinear'
+)
+
+
+logFile = paste("filelog0_" ,Sys.Date(),sep = "")
+ModelFile = paste("filemodel0_" ,Sys.Date(),sep = "")
+
+for (algos in myAlgo){
+  ptm = proc.time()
+  Tcontrol = trainControl(method="cv", number=5)
+  print(algos)
+  testmodel = train(Party ~ . , trControl=Tcontrol, data=trainC, method=algos)
+  cat(print(testmodel), file=logFile, append=TRUE, sep = "\n")
+  time = proc.time() - ptm
+  data = c(testmodel$method,max(testmodel$results$Accuracy),time)
+  cat(paste(data,collapse=" "), file=ModelFile, append=TRUE, sep = "\n")
+}
+
+
+#####################
