@@ -3,6 +3,9 @@ setwd("/Users/krishna/MOOC/Edge/Data")
 library(ggplot2)
 library(maps)
 library(ggmap)
+library(stringr) 
+library(tm) 
+library(SnowballC) 
 statesMap = map_data("state")
 
 # Problem 1.1 - Drawing a Map of the US
@@ -115,6 +118,51 @@ plot(g, vertex.label=NA)
 V(g)$color = "black"
 V(g)$color[V(g)$locale == "A"] = "blue"
 V(g)$color[V(g)$locale == "B"] = "red"
-plot(g, vertex.label=NA)
+plot(g, vertex.shape="sphere",vertex.label=NA)
 
 # Problem 4 - Other Plotting Options
+?igraph.plotting
+
+
+# VISUALIZING TEXT DATA USING WORD CLOUDS
+tweets = read.csv("tweets.csv")
+str(tweets)
+corpus = Corpus(VectorSource(tweets$Tweet))
+corpus = tm_map(corpus , tolower)
+corpus = tm_map(corpus, PlainTextDocument)
+corpus = tm_map(corpus, removePunctuation)
+corpus = tm_map(corpus, removeWords, c('appele',stopwords('english')))
+allTweets = DocumentTermMatrix(corpus)
+allTweets
+
+# Problem 1.2 - Preparing the Data
+#  It will be easier to read and understand the word cloud if it includes full words instead of just the word stems
+
+# Problem 2.1 - Building a Word Cloud
+#install.packages("wordcloud")
+library(wordcloud)
+?wordcloud
+#  colnames colnames - correct
+
+# Problem 2.2 - Building a Word Cloud
+# colSums colSums - correct
+
+# Problem 2.3 - Building a Word Cloud
+dtmAbstract = as.data.frame(as.matrix(allTweets))
+wordcloud(colnames(dtmAbstract),colSums(dtmAbstract),scale=c(2, 0.25),random.color =T)
+
+# Problem 3.1 - Size and Color
+negativeTweets = subset(dtmAbstract,tweets$Avg <= -1)
+dim(negativeTweets)
+wordcloud(colnames(negativeTweets),colSums(negativeTweets))
+
+# Problem 4.1 - Selecting a Color Palette
+#install.packages('RColorBrewer')
+library(RColorBrewer)
+brewer.pal()
+display.brewer.all()
+brewer.pal(9, "Blues")[c(-5, -6, -7, -8, -9)]
+wordcloud(colnames(dtmAbstract),colSums(dtmAbstract),scale=c(2, 0.25),colors=brewer.pal(9, "Blues")[c(-5, -6, -7, -8, -9)])
+wordcloud(colnames(dtmAbstract),colSums(dtmAbstract),scale=c(2, 0.25),colors=brewer.pal(9, "Blues")[c(-1, -2, -3, -4)])
+colors=brewer.pal(9, "Blues")
+colors
