@@ -25,18 +25,33 @@ traindf$Income = ordered(traindf$Income, levels= levelsI)
 testdf$Income = ordered(testdf$Income, levels= levelsI)
 
 # Fix YOB as factor
-traindf$YOB = 2013 - (traindf$YOB)
-testdf$YOB = 2013 - (testdf$YOB)
-traindf$YOB = as.factor(log(traindf$YOB))
-testdf$YOB = as.factor(log(testdf$YOB))
+traindf$YOB = (traindf$YOB)
+testdf$YOB = (testdf$YOB)
+traindf$YOB = as.factor((traindf$YOB))
+testdf$YOB = as.factor((testdf$YOB))
 
-
+table(traindf$HouseholdStatus)
 features =c('YOB','Gender','Income','HouseholdStatus','EducationLevel','Party'
             ,'Q98197','Q109244','Q113181','Q115611','Q119851',
             'Q120379','Q120472','Q120978','Q121011','Q98869')
 
 trainC = traindf[, (names(traindf) %in% features)]
 testC = testdf[, (names(testdf) %in% features)]
+
+
+Tcontrol <- trainControl(method="cv", number=5)
+testmodel = train(Party ~ . + EducationLevel:Income ,
+                  trControl=Tcontrol, data = traindf, method=c('gbm'))
+print(testmodel)
+
+
+op= predict(testmodel,testdf)
+op =cbind.data.frame(testdf$USER_ID  ,op)
+colnames(op) <-  c("USER_ID","Predictions")
+write.table(op,"output.csv", row.names=FALSE,sep=",",quote=F)
+
+
+
 
 #sapply(testC, function(x) sum(is.na(x)))
 
