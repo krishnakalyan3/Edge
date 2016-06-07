@@ -57,9 +57,7 @@ write.table(op,"output.csv", row.names=FALSE,sep=",",quote=F)
 
 model_list <- caretList(
   Party ~ . , data=trainC,
-  #methodList= c('glmnet','knn','gbm','rf','svmPoly','bagFDA'),
   methodList= c('pda','widekernelpls','glmnet','rpart','knn'),
-  #methodList='PenalizedLDA',
   trControl=trainControl(savePredictions="final",verboseIter = T,
                          classProbs=TRUE)
 )
@@ -69,7 +67,6 @@ modelCor(resamples(model_list))
 
 gbmGrid <-  expand.grid(interaction.depth = c(1, 5, 9),
                         n.trees = (1:30)*50,
-                        shrinkage = 0.1,
                         n.minobsinnode = 10)
 
 glm_ensemble <- caretStack(
