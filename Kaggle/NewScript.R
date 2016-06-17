@@ -4,14 +4,12 @@ library(caret)
 library(doMC)
 library(e1071)
 library(caTools)
-library(neuralnet)
 library(mice)
 library(caret)
-library(nnet)
 library(caretEnsemble)
+require(xgboost)
 registerDoMC(4)
 setwd("/Users/krishna/MOOC/Edge/Kaggle/Imputes")
-
 traindf = read.csv("imputeTrain.csv",na.strings=c("","NA"),sep='|')
 testdf =  read.csv("imputeTest.csv",na.strings=c("","NA"),sep='|')
 
@@ -26,12 +24,11 @@ traindf$Income = ordered(traindf$Income, levels= levelsI)
 testdf$Income = ordered(testdf$Income, levels= levelsI)
 
 # Fix YOB as factor
-#traindf$YOB = (2013 -traindf$YOB)
-#testdf$YOB = (2013 - testdf$YOB)
-#traindf$YOB <- cut(traindf$YOB, breaks=c(0, 20, 25,32,42,56))
-#testdf$YOB <- cut(testdf$YOB, breaks=c(0, 20, 25,32,42,56))
 traindf$YOB = as.factor(traindf$YOB)
 testdf$YOB = as.factor(testdf$YOB)
+
+# Fix Party
+traindf$Party = ifelse(traindf$Party == "Republican", 1, 0)
 
 features =c('YOB','Gender','Income',
             'HouseholdStatus','EducationLevel','Party',
@@ -42,31 +39,13 @@ features =c('YOB','Gender','Income',
             #'Q116953', # Do you like rules?
             #'Q120379', # Do you have (or plan to pursue) a Masters or Doctoral degree?
             #'Q111580' # As a teenager, do/did you have parents who were generally more supportive or demanding?
-            )
+)
 
-features1 =c('YOB','Gender','Income',
-            'HouseholdStatus','EducationLevel','Party','USER_ID',
-            'Q109244','Q115611')
+trainC = traindf[, (names(traindf) %in% features)]
+testC = testdf[, (names(testdf) %in% features)]
 
-trainC = traindf[, !(names(traindf) %in% features1)]
-testC = testdf[, !(names(testdf) %in% features1)]
-trainC$Tag = "train"
-testC$Tag ="test"
-alldata = rbind(trainC,testC)
-names(alldata)
-library('mclust')
-library(cluster)
-library(cluster)
-clusGap(alldata[,-100], kmeans, 10, B = 100, verbose = interactive())
-
-
-
-km$tot.withinss
-plot(alldata[,-100],col=km$cluster,pch=19)
-par(mar=c(1,1,1,1))
-
-#################### Default Model #############################
-gbmGrid <-  expand.grid(interaction.depth = c(1, 5, 9),
+##############################
+gbmGrid <-  expand.grid(interaction.depth = c(1,2,3,4, 5),
                         n.trees = (1:30)*50,
                         shrinkage = 0.1,
                         n.minobsinnode = 20)
@@ -76,44 +55,8 @@ testmodel = train(Party ~ . ,
                   trControl=Tcontrol, data = trainC,
                   tuneGrid = gbmGrid,
                   method = "gbm"
-                  )
+)
 max(testmodel$results$Accuracy)
 testmodel$bestTune
 plot(testmodel)
 
-######################## Ensemble ##############################
-model_list <- caretList(
-  Party ~ . , data=trainC,
-  methodList= c('gbm','knn','widekernelpls','rpart','dnn'),
-  trControl=trainControl(savePredictions="final",verboseIter = T,
-                         classProbs=TRUE)
-)
-modelCor(resamples(model_list))
-
-glm_ensemble <- caretStack(
-  model_list
-)
-print(glm_ensemble)
-
-
-
-
-
-
-
-#################### Submission ##############################
-pred = predict(testmodel,testC)
-op =cbind.data.frame(testdf$USER_ID  ,pred)
-colnames(op) <-  c("USER_ID","Predictions")
-write.table(op,"output.csv", row.names=FALSE,sep=",",quote=F)
-
-
-
-######### % OF questions unanswered
-unanswered <- function(data){
-  op = table(data)
-  unans = op[2]/sum(op)
-  return(unans)
-}
-unanswered(traindf[,'Q116881'])
-#unanswered(traindf$Q115777)
